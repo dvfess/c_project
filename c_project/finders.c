@@ -1,6 +1,9 @@
 int binary(int element, int arrLen, int *arr) {
 	/*3. –еализовать бинарный алгоритм поиска в виде функции, которой передаЄтс€ отсортированный
-		массив. ‘ункци€ возвращает индекс найденного элемента или Ц1, если элемент не найден.*/	int a = 0;	int b = arrLen;	int idx = (a + b) / 2;
+		массив. ‘ункци€ возвращает индекс найденного элемента или Ц1, если элемент не найден.*/
+	int a = 0;
+	int b = arrLen;
+	int idx = (a + b) / 2;
 
 	while (1) {
 		if (arr[idx] == element) return idx;
@@ -16,5 +19,6 @@ int binary(int element, int arrLen, int *arr) {
 
 		if (a == b) return -1;
 	}
-	return -1;
+
+	return -1;
 }

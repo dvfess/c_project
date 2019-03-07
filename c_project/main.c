@@ -13,7 +13,7 @@
 void separator() {
 	for (int i = 0; i < 80; i++)
 		printf("-");
-	puts("");
+	puts("\n");
 }
 
 void print(int N, int *a) {
@@ -43,10 +43,23 @@ void sol1(int len, int *a) {
 
 }
 
+void sol2(int len, int *a) {
+	/*2. *Реализовать шейкерную сортировку*/
+	puts("Shaker");
+	int wkArr[MaxN];
+	puts("Исходный массив");
+	memcpy(wkArr, a, sizeof(wkArr));
+	print(len, wkArr);
+	shakeIt(len, wkArr);
+	print(len, wkArr);
+
+}
+
 void sol3(int len, int *a) {
 	/* 3. Реализовать бинарный алгоритм поиска в виде функции, которой передаётся отсортированный
-		  массив. Функция возвращает индекс найденного элемента или –1, если элемент не найден.*/	int wkArr[MaxN];
-	memcpy(wkArr, a, sizeof(wkArr));	optBubbleSort(len, wkArr);	print(len, wkArr);	printf("%i", binary(47, len, wkArr));
+		  массив. Функция возвращает индекс найденного элемента или –1, если элемент не найден.*/	puts("Binary search");
+	int wkArr[MaxN];
+	memcpy(wkArr, a, sizeof(wkArr));	optBubbleSort(len, wkArr);	puts("Исходный массив");	print(len, wkArr);	int findFor = 47;	printf("idx of %i is %i", findFor, binary(findFor, len, wkArr));
 }
 
 int main(int argc, char *argv[]) {
@@ -65,6 +78,9 @@ int main(int argc, char *argv[]) {
 
 		// Первое задание
 		sol1(arrLen, srcArray);
+		_
+		// Второе задание
+		sol2(arrLen, srcArray);
 		_
 		// Третье задание
 		sol3(arrLen, srcArray);
