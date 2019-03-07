@@ -22,21 +22,27 @@ int bubbleSort(int len, int *a) {
 
 int shakeIt(int len, int *arr) {
 	// Шейкерная сортировка
+	int counter = 0;
 	int start = 0;
 	int stop = len - 1;
 	int incr = 1;
 	
 	while (start <= stop) {
-		for (int i = start; i < stop; i++)
+		counter++;
+		for (int i = start; i < stop; i++) {
 			if (arr[i] > arr[i + 1]) swap(&arr[i], &arr[i + 1]);
+			counter++;
+		}
 		stop--;
 
-		for (int i = stop; i > start; i--)
+		for (int i = stop; i > start; i--) {
 			if (arr[i] < arr[i - 1]) swap(&arr[i], &arr[i - 1]);
+			counter++;
+		}
 		start++;
 	}
 
-	return 0;
+	return counter;
 }
 
 int optBubbleSort(int len, int *a) {

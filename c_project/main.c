@@ -50,7 +50,7 @@ void sol2(int len, int *a) {
 	puts("Исходный массив");
 	memcpy(wkArr, a, sizeof(wkArr));
 	print(len, wkArr);
-	shakeIt(len, wkArr);
+	printf("Шейкерная сортировка. Количество операций: %i\n", shakeIt(len, wkArr));
 	print(len, wkArr);
 
 }
