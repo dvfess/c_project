@@ -1,94 +1,96 @@
-﻿#include <stdio.h>
+﻿//3. ***Требуется обойти конём шахматную доску размером N Ч M, пройдя через все поля доски
+//по одному разу.Здесь алгоритм решения такой же, как и в задаче о 8 ферзях.Разница только в
+//проверке положения коня.
+// Дмитрий Волков
+
+
 #include <locale.h>
-#include <limits.h>
-#include <math.h>
-#include <errno.h>
+#include <stdio.h>
 #include <string.h>
-#include "sorters.c"
-#include "finders.c"
 
-#define _ separator();
-#define MaxN 100
+#define MOVES 8 // Количество возможных ходов коня
+#define DSIZE 50 // Максимальный размер доски
 
-void separator() {
-	for (int i = 0; i < 80; i++)
-		printf("-");
-	puts("\n");
+// Ходы коня
+int steps[MOVES][2];
+int horse_moves[][2] = {
+ {-1, -2}, {-2, -1}, {-2,  1}, { 1, -2}, {-1,  2}, { 2, -1}, { 1,  2}, { 2,  1}
+};
+
+
+int N, M; // Размер доски
+int move = 0; // Номер шага
+int max_moves; // Количество ходов на всей доске
+int result[DSIZE][DSIZE]; // Результат
+int start_n, start_m; // Начальная клетка
+int cur_n, cur_m; // Текущая клетка
+
+// Проверка хода
+int chkMove(int n, int m)
+{
+	// Координаты принадлежат доске и клетка == 0
+	return result[n][m] == 0 && n > 0 && m > 0 && n <= N && m <= M;
 }
 
-void print(int N, int *a) {
-	for (int i = 0; i < N; i++)
-		printf("%4i", a[i]);
-	printf("\n");
-}
+int findPath(int cur_n, int cur_m, int cur_move)
+{
+	move = result[cur_n][cur_m] = cur_move; // Запомнить ход
+	if (cur_move > max_moves) return 1; // Закончили обход
 
-void sol1(int len, int *a) {
-	/*1.  Попробовать оптимизировать пузырьковую сортировку. Сравнить количество операций
-		  сравнения оптимизированной и неоптимизированной программы. Написать функции
-		  сортировки, которые возвращают количество операций.
-		Дмитрий Волков
-	*/
-	int wkArr[MaxN];
-	memcpy(wkArr, a, sizeof(wkArr));
+	for (int i = 0; i < MOVES; i++)
+	{
+		// Следующий возможный шаг
+		int new_n = cur_n + steps[i][0];
+		int new_m = cur_m + steps[i][1];
 
-	puts("Bubble sort");
-	puts("Исходный массив");
-	print(len, wkArr);
-	printf("Не оптимизированная сортировка пузырьком. Количество операций: %i\n", bubbleSort(len, wkArr));
-	print(len, wkArr);
-
-	memcpy(wkArr, a, sizeof(wkArr)); // Исходный массив
-	printf("Оптимизированная сортировка пузырьком. Количество операций: %i\n", optBubbleSort(len, wkArr));
-	print(len, wkArr);
-
-}
-
-void sol2(int len, int *a) {
-	/*2. *Реализовать шейкерную сортировку*/
-	puts("Shaker");
-	int wkArr[MaxN];
-	puts("Исходный массив");
-	memcpy(wkArr, a, sizeof(wkArr));
-	print(len, wkArr);
-	printf("Шейкерная сортировка. Количество операций: %i\n", shakeIt(len, wkArr));
-	print(len, wkArr);
-
-}
-
-void sol3(int len, int *a) {
-	/* 3. Реализовать бинарный алгоритм поиска в виде функции, которой передаётся отсортированный
-		  массив. Функция возвращает индекс найденного элемента или –1, если элемент не найден.*/	puts("Binary search");
-	int wkArr[MaxN];
-	memcpy(wkArr, a, sizeof(wkArr));	optBubbleSort(len, wkArr);	puts("Исходный массив");	print(len, wkArr);	int findFor = 47;	printf("idx of %i is %i", findFor, binary(findFor, len, wkArr));
-}
-
-int main(int argc, char *argv[]) {
-	setlocale(LC_ALL, "Rus");
-	int srcArray[MaxN];
-	int arrLen;
-	errno_t err;
-	FILE *in;
-
-	if ((err = fopen_s(&in, ".\\data.txt", "r")) == 0) {
-		fscanf_s(in, "%i", &arrLen);
-		for (int i = 0; i < arrLen; i++) {
-			fscanf_s(in, "%i", &srcArray[i]);
+		if (chkMove(new_n, new_m) && findPath(new_n, new_m, move + 1)) {
+			return 1;
 		}
-		fclose(in);
-
-		// Первое задание
-		sol1(arrLen, srcArray);
-		_
-		// Второе задание
-		sol2(arrLen, srcArray);
-		_
-		// Третье задание
-		sol3(arrLen, srcArray);
-
 	}
-	else {
-		fprintf(stderr, "cannot open file");
+
+	// Неудачный ход, отмена шага
+	result[cur_n][cur_m] = 0;
+	move--;
+	return 0;
+}
+
+void print()
+{
+	for (int i = 1; i <= M; i++)
+	{
+		for (int j = 1; j <= N; j++)
+			printf("[ %2d ] ", result[j][i]);
+		printf("\n\n");
 	}
+}
+
+void searchSolution()
+{
+	for (int i = 1; i <= M; i++)
+	{
+		for (int j = 1; j <= N; j++)
+		{
+			memset(result, 0, sizeof(result)); // Обнулить массив
+			move = 0;
+			start_n = cur_n = j;
+			start_m = cur_m = i;
+			result[cur_n][cur_m] = 1;
+			max_moves = N * M - 1;
+			findPath(start_n, start_m, 1);
+		}
+	}
+}
+
+
+int main()
+{
+	setlocale(LC_ALL, "Rus");
+	N = 5; M = 5;
+	// Заполняем шаги коня на все клетки новой доски
+	memcpy(steps, horse_moves, sizeof(horse_moves));
+	// Добавить Вансдорфа http://algolist.manual.ru/maths/combinat/knight.php
+	searchSolution();
+	print();
 
 	return 0;
 }
