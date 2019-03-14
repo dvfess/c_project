@@ -112,7 +112,7 @@ void sol1() {
 }
 
 
-void sol2() {
+bool sol2() {
 	// Написать программу, которая определяет, является ли введённая скобочная
 	// последовательность правильной.
 	// Примеры правильных скобочных выражений
@@ -137,24 +137,28 @@ void sol2() {
 			push(&opened, string[i]);
 		}
 		else if (string[i] == ']' || string[i] == ')' || string[i] == '}') {
-			char pair = pop(&opened);
+			char open_pair = pop(&opened);
 			switch (string[i])
 			{
 			case ']':
-				if (pair == '[') paired = true;
+				if (open_pair == '[') paired = true;
 				break;
 			case ')':
-				if (pair == '(') paired = true;
+				if (open_pair == '(') paired = true;
 				break;
 			case '}':
-				if (pair == '{') paired = true;
+				if (open_pair == '{') paired = true;
 				break;
 			default:
 				break;
 			}
-			if (!paired) printf("Не все скобки парные! '%с' '%с'\n", string[i], pair);
+			if (!paired) {
+				printf("Not paired brackets '%c' & '%c'\n", open_pair, string[i]);
+				break;
+			}
 		}
 	}
+	return paired;
 }
 
 int main()
