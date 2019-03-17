@@ -66,7 +66,7 @@ void push(Stack *stk, T value)
 T pop(Stack *stk) {
 	if (stk->size == 0)
 	{
-		printf("Stack is empty");
+		printf("Stack is empty\n");
 		return '\0';
 	}
 	// Временный указатель
@@ -121,9 +121,9 @@ bool sol2() {
 	// )(, ())({ ), (, ]) }), ([(]),
 	// для скобок [, (, { .
 	// Например: (2 + (2 * 2)) или [2 / {5 * (4 + 7)}].
-	// выражение:
 	const int s_size = 100;
-	char *string = "(2 + (2 * 2))";
+	// выражение
+	char *string = "(2 + (2 * 2)))";
 	int length = 0;
 	for (int i = 0; i < string[i] != '\0'; i++)
 		length++;
@@ -138,6 +138,10 @@ bool sol2() {
 		}
 		else if (string[i] == ']' || string[i] == ')' || string[i] == '}') {
 			char open_pair = pop(&opened);
+			if (open_pair == '\0') {
+				printf("You louse some bracket!");
+				return false;
+			}
 			switch (string[i])
 			{
 			case ']':
