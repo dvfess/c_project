@@ -8,6 +8,7 @@
 
 #define _ separator();
 #define N 10
+#define maxValue 30
 
 // 1. Реализовать сортировку подсчётом.
 // 2. Реализовать быструю сортировку.
@@ -22,6 +23,61 @@ void swap(int *a, int *b) {
 	c = *a, *a = *b, *b = c;
 }
 
+//Заполняет массив размера size произвольными целыми числами
+void fill_massive(int size, int *arr) {
+	srand(time(NULL));
+	for (int i = 0; i < size; i++)
+		arr[i] = rand() % maxValue;
+}
+
+//Копирует массив src в массив dst.
+void copy_massive(int size, int *src, int *dst) {
+	for (int i = 0; i < size; i++)
+		dst[i] = src[i];
+}
+
+
+void print_massive(int size, int *arr) {
+	for (int i = 0; i < size; i++)
+		printf("%d ", arr[i]);
+	printf("\n");
+}
+
+// Сортировка подсчётом
+void count_sort(int size, int *arr) {
+	int c[maxValue];
+
+	// Обнуляем массив
+	for (int i = 0; i < maxValue; i++)
+		c[i] = 0;
+
+	// Организуем частотный массив "c" по arr
+	for (int i = 0; i < size; i++)
+		c[arr[i]]++;
+
+	printf("arr massive:\n");
+	print_massive(size, arr);
+	printf("частотный массив:\n");
+	print_massive(maxValue, c);
+
+	// Заполняем массив arr количеством повторений из частотного массива
+	for (int arrIndex = 0; arrIndex < size; arrIndex++)
+	{
+		for (int cIndex = 0; cIndex < maxValue; cIndex++)
+		{
+			// Ищу значение !=0 в c[]
+			// В arr, попадает cIndex, c[cIndex] раз.
+			int i = 0;
+			for (; i < c[cIndex]; i++)
+			{
+				arr[i + arrIndex] = cIndex;
+			}
+			arrIndex += i;
+		}
+	}
+}
+
+// Быстрая сортировка
 void hoar_sort(int *arr, int left, int right)
 {
 	int i = left, j = right;
@@ -49,38 +105,27 @@ void separator() {
 	printf("\n");
 }
 
-//Заполняет массив размера size произвольными целыми числами
-void fill_massive(int size, int *arr) {
-	srand(time(NULL));
-	for (int i = 0; i < size; i++)
-		arr[i] = rand() % 30;
-}
-
-//Копирует массив src в массив dst.
-void copy_massive(int size, int *src, int *dst) {
-	for (int i = 0; i < size; i++)
-		dst[i] = src[i];
-}
-
-void print_massive(int size, int *arr) {
-	for (int i = 0; i < size; i++)
-		printf("%d ", arr[i]);
-	printf("\n");
-}
 
 int main()
 {
 	setlocale(LC_ALL, "Rus");
-	int srcArray[N];
-	int workArray[N];
+	int srcArray[N]; // Эталонный массив
+	int workArray[N]; // копия эталонного массива для демонстрации
 	fill_massive(N, &srcArray);
-	print_massive(N, &srcArray);
 	copy_massive(N, &srcArray, &workArray);
-	printf("workArray before sort:\n");
+	printf("Быстрая сортировка:\n");
+	printf("Массив до сортировки:\n");
 	print_massive(N, &workArray);
-	printf("sorting...\n");
 	hoar_sort(&workArray, 0, N - 1);
-	printf("workArray after sort:\n");
+	printf("Отсортированный массив:\n");
+	print_massive(N, &workArray);
+	_
+	printf("Сортировка подсчётом:\n");
+	copy_massive(N, &srcArray, &workArray);
+	printf("Массив до сортировки:\n");
+	print_massive(N, &workArray);
+	count_sort(N, &workArray);
+	printf("Отсортированный массив:\n");
 	print_massive(N, &workArray);
 	return 0;
 }
